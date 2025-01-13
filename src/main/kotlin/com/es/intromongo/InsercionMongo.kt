@@ -19,7 +19,7 @@ fun main() {
         val coll = database.getCollection("collholamundo")
 
         // Creamos el documento que queramos insertar
-        val nuevoDocumento: Document = Document().append("saludo", "Hello World")
+        val nuevoDocumento: Document = Document().append("saludo", "Ciao")
 
         // Insertamos en la base de datos
         coll.insertOne(nuevoDocumento)

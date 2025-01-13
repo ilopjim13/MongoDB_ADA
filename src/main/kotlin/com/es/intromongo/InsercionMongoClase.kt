@@ -1,7 +1,8 @@
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
-import com.mongodb.client.MongoDatabase
+import com.mongodb.client.MongoCollection
 import io.github.cdimascio.dotenv.dotenv
+import org.bson.Document
 
 fun main() {
 
@@ -14,16 +15,12 @@ fun main() {
 
     try {
         // Obtener la base de datos
-        val database: MongoDatabase = mongoClient.getDatabase(databaseName)
+        val database = mongoClient.getDatabase(databaseName)
 
-        // Listar las colecciones
-        val collections = database.listCollectionNames()
+        // Obtener la colección
+        val collection = database.getCollection("collprueba")
 
-        // Mostrar las colecciones
-        println("Colecciones en la base de datos '$databaseName':")
-        for (collectionName in collections) {
-            println("- $collectionName")
-        }
+
     } catch (e: Exception) {
         println("Error al conectar a MongoDB: ${e.message}")
     } finally {
