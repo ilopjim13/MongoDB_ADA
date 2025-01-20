@@ -24,7 +24,7 @@ fun main() {
 
     collection.insertOne(juegoNuevo)
 
-    val juegoNuevo2 = Juego(ObjectId(), "Alfonso", listOf<Int>(50, 70, 99, 90))
+    val juegoNuevo2 = Juego(ObjectId(), "Pedro", listOf<Int>(50, 70, 99, 90))
     val juegoNuevo3 = Juego(ObjectId(), "Maria", listOf<Int>(57, 74, 100, 90))
     val juegoNuevo4 = Juego(ObjectId(), "Jose", listOf<Int>(88, 70, 10, 20))
     val juegoNuevo5 = Juego(ObjectId(), "Ana", listOf<Int>(20, 70, 54, 30))
@@ -70,6 +70,75 @@ fun main() {
     val operacionUpdate = collection.findOneAndUpdate(filtroUpdateSimple, updateSet, returnDoc)
 
     println("id: ${operacionUpdate.id}\nnombre: ${operacionUpdate.nombre}\n--------")
+
+
+    // Modificar un elemento concreto de un array -> Primer elemento
+    println("\n// Modificar un elemento concreto de un array -> Primer elemento")
+    val filtroUpdatePrimera = Filters.eq("puntuaciones", 50)
+
+    val updateInc = Updates.inc("puntuaciones.$", 2)
+
+    val operacionUpdateInc = collection.findOneAndUpdate(filtroUpdatePrimera, updateInc, returnDoc)
+
+    println("id: ${operacionUpdateInc.id}\nnombre: ${operacionUpdateInc.nombre}\n--------")
+
+    // Modificar un elemento con varios condicionales
+    // Filtro -> Para Maria y cuya puntuacion sea mayor a 90
+    println("\n// Filtro -> Para Maria y cuya puntuacion sea mayor a 90\n")
+    val filterCombi = Filters.and(
+        Filters.gte("puntuaciones", 90),
+        Filters.eq("nombre", "Maria")
+    )
+
+    val updateCombi = Updates.inc("puntuaciones.$", -2)
+
+    val operacionUpdateCombi = collection.findOneAndUpdate(filterCombi, updateCombi, returnDoc)
+
+    println("id: ${operacionUpdateCombi.id}\nnombre: ${operacionUpdateCombi.nombre}\n--------")
+
+
+    // MODIFICAR TODOS LOS ELEMENTOS DENTRO DE UN ARRAY QUE CUMPLA UNA CONDICIÓN
+    /*
+    $map -> map es la operación para modificar todos los elementos dentro de un array
+        -> "input": $nombre del array
+        -> "as": alias del elemento que se itera
+        -> "in": define cómo se transforma cada elemento
+            DENTRO DE in SE DEFINEN LAS REGLAS A APLICAR A LOS ELEMENTOS
+            -> $cond: condicion
+                -> if: la condición que evalúa cada elemento
+                -> then: el valor que se usará si la condición es verdadera
+                -> else: el valor que se usará si la condición es falsa
+     */
+
+    // MODIFICAR TODAS LAS PUNTUACIONES MAYORES O IGUALES A 70 EN EL ARRAY DE JOSE
+//    val filtroNom = Filters.eq("nombre", "Jose")
+//    val updatesMap = Updates.set("puntuaciones",
+//        Document("\$map", Document()
+//            .append("input", "\$puntuaciones")
+//            .append("as", "puntuacion")
+//            .append("in", Document("\$cond", Document()
+//                .append("if", Document("\$gte", listOf("\$\$puntuacion", 70))
+//                .append("then", 0)
+//                .append("else", "\$\$puntuacion"))))))
+//
+//    val resultadoMap = collection.findOneAndUpdate(filtroNom, updatesMap, returnDoc)
+//
+//    println("id: ${resultadoMap.id}\nnombre: ${resultadoMap.nombre}\n--------")
+
+    /*
+    DEPARTAMENTOS QUE CONTIENEN UNA LISTA DE EMPLEADOS
+    DEPARTAMENTO {
+        "nombre": "Informatica"
+        "empleados": ["Maria", "Pepe"...]
+    }
+
+    1. Listar todos los empleados de un departamento en concreto
+    2. Insertar un nuevo empleado en un departamento en concreto
+    3. Buscar los departamentos que no tengan empleados
+    4. Cambiar el nombre de un empleado en concreto de un departamento en concreto
+    5. Actualizar el nombre del departamento e imprimir toda su información por pantalla
+     */
+
 
 
 
