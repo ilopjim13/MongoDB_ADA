@@ -20,11 +20,15 @@ fun buscarGenero(console: Console, database: Database) {
 }
 
 fun registrarJuego(console: Console, database: Database) {
-    val titulo = console.getTitulo()
+    var titulo:String
+    do {
+        titulo = console.getTitulo()
+        if (!database.comprobarJuegoRepetido(titulo)) console.showMessage("Este juego ya existe en la base de datos")
+    } while (!database.comprobarJuegoRepetido(titulo))
+
     val genero = console.getGenero()
     val precio = console.getPrecio()
-    if (database.comprobarJuegoRepetido(titulo)) database.registrarJuego(Juego(titulo, genero, precio, Date()))
-    else console.showMessage("Este juego ya existe en la base de datos")
+    database.registrarJuego(Juego(titulo, genero, precio, Date()))
 }
 
 fun eliminarJuegoGenero(console: Console, database: Database) {
