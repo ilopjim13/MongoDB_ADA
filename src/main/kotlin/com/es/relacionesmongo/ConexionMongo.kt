@@ -8,7 +8,7 @@ import io.github.cdimascio.dotenv.dotenv
 object ConexionMongo {
     private val mongoClient: MongoClient by lazy {
         val dotenv = dotenv()
-        val connectString = dotenv["URL_MONGODB_2"]
+        val connectString = dotenv["URL_MONGODB"]
 
         MongoClients.create(connectString)
     }
